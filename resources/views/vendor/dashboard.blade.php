@@ -16,7 +16,7 @@
                     <thead class="bg-gray-100">
                         <tr>
                             <th class="border px-4 py-2 text-left">Amount</th>
-                            <th class="border px-4 py-2 text-left">Email</th>
+                            <th class="border px-4 py-2 text-left">Donor Email</th>
                             <th class="border px-4 py-2 text-left">Date</th>
                         </tr>
                     </thead>
@@ -27,7 +27,7 @@
                                     ${{ number_format($charge->amount / 100, 2) }}
                                 </td>
                                 <td class="border px-4 py-2">
-                                    {{ $charge->billing_details->email ?? 'N/A' }}
+                                   {{ $charge->metadata->donor_email ?? 'N/A' }}
                                 </td>
                                 <td class="border px-4 py-2">
                                     {{ \Carbon\Carbon::createFromTimestamp($charge->created)->format('M d, Y h:i A') }}

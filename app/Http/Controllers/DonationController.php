@@ -4,45 +4,45 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Vendor;
+
 class DonationController extends Controller
 {
     public function showForm()
-    {
-        return view('donor.donate');
-    }
+	{
+	    $vendors = Vendor::all(); // Get all vendors
+
+	    return view('donor.donate', compact('vendors'));
+	}
 
     public function donate(Request $request)
 	{
 	    $request->validate([
 	        'amount' => 'required|numeric|min:1',
 	        'stripeToken' => 'required|string',
+	        'vendor_id' => 'required|exists:vendors,id',
 	    ]);
 
 	    \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
-	    // Get donor email and vendor_id
 	    $donor = auth()->guard('donor')->user();
-	    $donorEmail = $donor->email;
-	    $donorId = $donor->id;
-
-	    // For demo: hardcoded vendor_id (you can also pass it from form or select vendor dynamically)
-	    $vendorId = 1;
 
 	    \Stripe\Charge::create([
-	        'amount' => $request->amount * 100, // Stripe accepts cents
+	        'amount' => $request->amount * 100,
 	        'currency' => 'usd',
 	        'source' => $request->stripeToken,
 	        'description' => 'Donation via AI',
-	        'receipt_email' => $donorEmail, // Donor will get a receipt
+	        'receipt_email' => $donor->email,
 	        'metadata' => [
-	            'donor_id' => $donorId,
-	            'donor_email' => $donorEmail,
-	            'vendor_id' => $vendorId,
+	            'vendor_id' => $request->vendor_id,
+	            'donor_id' => $donor->id,
+	            'donor_email' => $donor->email,
 	        ],
 	    ]);
 
 	    return redirect()->route('donor.dashboard')->with('success', 'Thank you for your donation!');
 	}
+
 
 
     public function vendor_dashboard()

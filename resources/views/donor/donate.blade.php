@@ -22,6 +22,20 @@
                     class="block mt-1 w-full rounded-md border-gray-300 shadow-sm"
                 >
 
+                <label for="vendor_id" class="block font-medium text-sm text-gray-700 mt-4">Select Vendor:</label>
+                <select 
+                    name="vendor_id" 
+                    id="vendor_id" 
+                    required 
+                    class="block mt-1 w-full rounded-md border-gray-300 shadow-sm"
+                >
+                    <option value="">-- Choose a Vendor --</option>
+                    @foreach ($vendors as $vendor)
+                        <option value="{{ $vendor->id }}">{{ $vendor->id }} : {{ $vendor->name }}</option>
+                    @endforeach
+                </select>
+
+
                 <label for="card-element" class="block font-medium text-sm text-gray-700 mt-4">Credit or Debit Card:</label>
                 <div id="card-element" class="p-3 border border-gray-300 rounded-md"></div>
 

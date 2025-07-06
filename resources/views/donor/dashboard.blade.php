@@ -5,6 +5,11 @@
         <h2 class="text-xl font-semibold leading-tight text-gray-800">
             Welcome, {{ auth()->guard('donor')->user()->name }}
         </h2>
+        @if(session('success'))
+		    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
+		        {{ session('success') }}
+		    </div>
+		@endif
     </x-slot>
 
     <div class="py-6">
