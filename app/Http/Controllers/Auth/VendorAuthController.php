@@ -13,37 +13,26 @@ class VendorAuthController extends Controller
      */
     public function showLoginForm()
     {
-        return view('auth.vendor-login');
+        return redirect()->route('login'); // or your specific login route, e.g. 'donor.login.form'
     }
 
-    /**
-     * Handle a login request for vendor.
-     */
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        $credentials = $request->only('email', 'password');
 
-        if (Auth::guard('vendor')->attempt($credentials, $request->filled('remember'))) {
+        if (Auth::guard('vendor')->attempt($credentials)) {
             $request->session()->regenerate();
-
             return redirect()->intended(route('vendor.dashboard'));
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+            'email' => 'Invalid credentials',
         ]);
     }
 
-    /**
-     * Log the vendor out.
-     */
     public function logout(Request $request)
     {
         Auth::guard('vendor')->logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
