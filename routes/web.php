@@ -32,7 +32,7 @@ Route::prefix('vendor')->name('vendor.')->group(function () {
 
     Route::middleware('auth:vendor')->group(function () {
         //Route::view('dashboard', 'vendor.dashboard')->name('dashboard');
-        Route::get('dashboard', [DonationController::class, 'vendor_dashboard'])->name('vendor.dashboard');
+        Route::get('dashboard', [DonationController::class, 'vendor_dashboard'])->name('dashboard');
         // other vendor routes
     });
 });
