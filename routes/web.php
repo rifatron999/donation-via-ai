@@ -31,7 +31,8 @@ Route::prefix('vendor')->name('vendor.')->group(function () {
     Route::post('logout', [VendorAuthController::class, 'logout'])->name('logout');
 
     Route::middleware('auth:vendor')->group(function () {
-        Route::view('dashboard', 'vendor.dashboard')->name('dashboard');
+        //Route::view('dashboard', 'vendor.dashboard')->name('dashboard');
+        Route::get('dashboard', [DonationController::class, 'vendor_dashboard'])->name('vendor.dashboard');
         // other vendor routes
     });
 });

@@ -1,66 +1,43 @@
-<!-- resources/views/donate.blade.php -->
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            Donate
+        </h2>
+    </x-slot>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donate</title>
-    <style>
-        /* Basic styling */
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
+    <div class="py-6">
+        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8 bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
 
-        form {
-            max-width: 400px;
-            margin: 0 auto;
-        }
+            <form action="{{ route('donor.donate') }}" method="POST" id="payment-form">
+                @csrf
 
-        input[type="number"],
-        #card-element {
-            width: 100%;
-            padding: 10px;
-            margin: 12px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
+                <label for="amount" class="block font-medium text-sm text-gray-700">Amount (USD):</label>
+                <input 
+                    type="number" 
+                    name="amount" 
+                    id="amount" 
+                    placeholder="e.g., 20" 
+                    min="1" step="any" 
+                    required
+                    class="block mt-1 w-full rounded-md border-gray-300 shadow-sm"
+                >
 
-        #card-errors {
-            color: red;
-            margin-bottom: 12px;
-        }
+                <label for="card-element" class="block font-medium text-sm text-gray-700 mt-4">Credit or Debit Card:</label>
+                <div id="card-element" class="p-3 border border-gray-300 rounded-md"></div>
 
-        button {
-            padding: 10px 20px;
-            background-color: #6772e5;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+                <div id="card-errors" role="alert" class="text-red-600 mt-2 mb-4"></div>
 
-        button:disabled {
-            background-color: #bbb;
-        }
-    </style>
-</head>
-<body>
+                <button 
+                    type="submit" 
+                    id="submit-button"
+                    class="mt-4 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                    Donate
+                </button>
+            </form>
 
-    <h2>Donate</h2>
-
-    <form action="{{ route('donor.donate') }}" method="POST" id="payment-form">
-        @csrf
-        <label for="amount">Amount (USD):</label>
-        <input type="number" name="amount" id="amount" placeholder="e.g., 20" min="1" step="any" required>
-
-        <label for="card-element">Credit or Debit Card:</label>
-        <div id="card-element"></div>
-        <div id="card-errors" role="alert"></div>
-
-        <button type="submit" id="submit-button">Donate</button>
-    </form>
+        </div>
+    </div>
 
     <script src="https://js.stripe.com/v3/"></script>
     <script>
@@ -73,27 +50,17 @@
                 fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
                 fontSmoothing: 'antialiased',
                 fontSize: '16px',
-                '::placeholder': {
-                    color: '#aab7c4'
-                }
+                '::placeholder': { color: '#aab7c4' },
             },
-            invalid: {
-                color: '#fa755a',
-                iconColor: '#fa755a'
-            }
+            invalid: { color: '#fa755a', iconColor: '#fa755a' },
         };
 
         const card = elements.create('card', { style });
         card.mount('#card-element');
 
-        // Handle real-time validation errors
-        card.on('change', function(event) {
+        card.on('change', event => {
             const displayError = document.getElementById('card-errors');
-            if (event.error) {
-                displayError.textContent = event.error.message;
-            } else {
-                displayError.textContent = '';
-            }
+            displayError.textContent = event.error ? event.error.message : '';
         });
 
         const form = document.getElementById('payment-form');
@@ -106,22 +73,18 @@
             const { token, error } = await stripe.createToken(card);
 
             if (error) {
-                // Inform the user if there was an error.
                 const errorElement = document.getElementById('card-errors');
                 errorElement.textContent = error.message;
                 submitButton.disabled = false;
             } else {
-                // Append token to the form
                 const input = document.createElement('input');
                 input.type = 'hidden';
                 input.name = 'stripeToken';
                 input.value = token.id;
                 form.appendChild(input);
 
-                // Submit the form
                 form.submit();
             }
         });
     </script>
-</body>
-</html>
+</x-app-layout>
