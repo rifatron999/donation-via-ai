@@ -7,7 +7,7 @@ use App\Http\Controllers\DonationController;
 use App\Http\Controllers\Auth\MultiAuthLogoutController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome2');
 });
 
 // Donor Routes
@@ -18,7 +18,7 @@ Route::prefix('donor')->name('donor.')->group(function () {
 
     Route::middleware('auth:donor')->group(function () {
         Route::view('dashboard', 'donor.dashboard')->name('dashboard');
-         Route::get('donate', [DonationController::class, 'showForm'])->name('donate.form');
+        Route::get('donate', [DonationController::class, 'showForm'])->name('donate.form');
         Route::post('donate', [DonationController::class, 'donate'])->name('donate');
         // other donor routes
     });
