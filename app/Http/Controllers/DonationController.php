@@ -4,22 +4,29 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use Stripe\Stripe;
-use Stripe\Charge;
-
 class DonationController extends Controller
 {
+    public function showForm()
+    {
+        return view('donor.donate');
+    }
+
     public function donate(Request $request)
-	{
-	    Stripe::setApiKey(env('STRIPE_SECRET'));
+    {
+        $request->validate([
+            'amount' => 'required|numeric|min:1',
+            'stripeToken' => 'required|string',
+        ]);
 
-	    Charge::create([
-	        "amount" => $request->amount * 100,
-	        "currency" => "usd",
-	        "source" => $request->stripeToken,
-	        "description" => "Donation",
-	    ]);
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
-	    return back()->with('success', 'Thank you for your donation!');
-	}
+        \Stripe\Charge::create([
+            'amount' => $request->amount * 100, // Stripe accepts amounts in cents
+            'currency' => 'usd',
+            'source' => $request->stripeToken,
+            'description' => 'Donation via AI',
+        ]);
+
+        return redirect()->route('donor.dashboard')->with('success', 'Thank you for your donation!');
+    }
 }

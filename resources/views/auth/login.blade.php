@@ -39,9 +39,23 @@
                     </a>
                 @endif
 
-                <x-button class="ms-4">
+                <!-- <x-button class="ms-4">
                     {{ __('Log in') }}
-                </x-button>
+                </x-button> -->
+
+                <div class="mt-6 flex justify-center space-x-4">
+                    <a href="{{ route('donor.login') }}">
+                        <x-button class="ms-6">
+                            {{ __('Login as Donor') }}
+                        </x-button>
+                    </a>
+
+                    <a href="{{ route('vendor.login') }}">
+                        <x-button class="ms-6">
+                            {{ __('Login as Vendor') }}
+                        </x-button>
+                    </a>
+                </div>
             </div>
         </form>
     </x-authentication-card>

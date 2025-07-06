@@ -28,6 +28,15 @@
                 <x-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
                 <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
             </div>
+            <!-- Role Selection -->
+            <div class="mt-4">
+                <label for="role" class="block text-sm font-medium text-gray-700">Register As</label>
+                <select name="role" id="role" class="mt-1 block w-full">
+                    <option value="donor">Donor</option>
+                    <option value="vendor">Vendor</option>
+                </select>
+            </div>
+
 
             @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
                 <div class="mt-4">
